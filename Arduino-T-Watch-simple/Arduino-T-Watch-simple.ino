@@ -12,6 +12,7 @@
 #define MINUTE_COLOR    TFT_LIGHTGREY
 #define SECOND_COLOR    TFT_RED
 #define SIXTIETH        0.016666667
+#define TWELFTH         0.08333333
 #define SIXTIETH_RADIAN 0.10471976
 #define TWELFTH_RADIAN  0.52359878
 #define RIGHT_ANGLE     1.5707963
@@ -128,7 +129,7 @@ void loop() {
   // Pre-compute hand degrees, x & y coords for a fast screen update
   sdeg = SIXTIETH_RADIAN * ((0.001 * (cur_millis % 1000)) + ss); // 0-59 (includes millis)
   mdeg = (SIXTIETH * sdeg) + (SIXTIETH_RADIAN * mm); // 0-59 (includes seconds)
-  hdeg = (SIXTIETH * mdeg) + (TWELFTH_RADIAN * hh); // 0-11 (includes minutes)
+  hdeg = (TWELFTH * mdeg) + (TWELFTH_RADIAN * hh); // 0-11 (includes minutes)
   sdeg -= RIGHT_ANGLE;
   mdeg -= RIGHT_ANGLE;
   hdeg -= RIGHT_ANGLE;
