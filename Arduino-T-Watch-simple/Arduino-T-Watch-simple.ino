@@ -19,7 +19,7 @@
 #define CENTER          120
 
 // Uncomment to enable printing out nice debug messages.
-//#define DEBUG_MODE
+#define DEBUG_MODE
 
 #ifdef DEBUG_MODE
 // Define where debug output will be printed.
@@ -97,7 +97,32 @@ void setup(void) {
   axp.setStartupTime(AXP202_STARTUP_TIME_128MS);
   axp.setlongPressTime(0);
   axp.setTimeOutShutdown(true);
-  DEBUG_PRINTMLN(": AXP20X_Class init");
+  axp.enableChargeing(true);
+  DEBUG_PRINTM(": AXP20X_Class init, getBattPercentage: ");
+  DEBUG_PRINT(axp.getBattPercentage(), HEX);
+  DEBUG_PRINT(", debugCharging: ");
+  DEBUG_PRINT(axp.debugCharging(), HEX);
+  DEBUG_PRINT(", debugStatus: ");
+  DEBUG_PRINTLN(axp.debugStatus(), HEX);
+  DEBUG_PRINTM(": isBatteryConnect: ");
+  DEBUG_PRINT(axp.isBatteryConnect());
+  DEBUG_PRINT(", isChargeing: ");
+  DEBUG_PRINT(axp.isChargeing());
+  DEBUG_PRINT(", isLDO2Enable: ");
+  DEBUG_PRINT(axp.isLDO2Enable());
+  DEBUG_PRINT(", isLDO3Enable: ");
+  DEBUG_PRINT(axp.isLDO3Enable());
+  DEBUG_PRINT(", isLDO4Enable: ");
+  DEBUG_PRINT(axp.isLDO4Enable());
+  DEBUG_PRINT(", isDCDC3Enable: ");
+  DEBUG_PRINT(axp.isDCDC3Enable());
+  DEBUG_PRINT(", isDCDC2Enable: ");
+  DEBUG_PRINT(axp.isDCDC2Enable());
+  DEBUG_PRINT(", isChargeingEnable: ");
+  DEBUG_PRINT(axp.isChargeingEnable());
+  DEBUG_PRINT(", isVBUSPlug: ");
+  DEBUG_PRINTLN(axp.isVBUSPlug());
+  
 
   targetTime = ((millis() / 1000) + 1) * 1000;
 }
