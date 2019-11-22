@@ -7,6 +7,8 @@
 */
 // auto sleep time (in milliseconds)
 #define SLEEP_TIME 20000L
+// uncomment below define for using power chip turnoff power instead of light sleep
+#define AXP_POWER_OFF
 
 #define BACKGROUND BLACK
 #define MARK_COLOR WHITE
@@ -32,20 +34,24 @@
 #define LED_LEVEL 240
 
 #include <math.h>
-#include <SPI.h>
+
 #include <Arduino_ESP32SPI.h>
 #include <Arduino_GFX.h>
 #include <Arduino_TFT.h>
 #include <Arduino_ST7789.h> // Hardware-specific library for ST7789 (with or without CS pin)
-
-#include <esp_sleep.h>
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 19 /* MOSI */);
+Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 
 #include <Wire.h>
 #include "pcf8563.h"
-
 PCF8563_Class rtc;
-Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 19 /* MOSI */);
-Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
+
+#if defined(AXP_POWER_OFF)
+#include "axp20x.h"
+AXP20X_Class axp;
+#else
+#include <esp_sleep.h>
+#endif
 
 static float sdeg, mdeg, hdeg;
 static uint8_t osx = CENTER, osy = CENTER, omx = CENTER, omy = CENTER, ohx = CENTER, ohy = CENTER; // Saved H, M, S x & y coords
@@ -82,6 +88,14 @@ void setup(void)
   // read date and time from RTC
   read_rtc();
   log_i("read date and time from RTC");
+
+#if defined(AXP_POWER_OFF)
+  axp.begin();
+  axp.setStartupTime(AXP202_STARTUP_TIME_128MS);
+  axp.setlongPressTime(0);
+  axp.setTimeOutShutdown(true);
+  axp.enableChargeing(true);
+#endif
 
   targetTime = ((millis() / 1000) + 1) * 1000;
   sleepTime = millis() + SLEEP_TIME;
@@ -191,6 +205,9 @@ void read_rtc()
 
 void enterSleep()
 {
+#if defined(AXP_POWER_OFF)
+    axp.shutdown();
+#else
   backlight(false);
   tft->displayOff();
 
@@ -204,6 +221,7 @@ void enterSleep()
 
   targetTime = ((millis() / 1000) + 1) * 1000;
   sleepTime = millis() + SLEEP_TIME;
+#endif
 }
 
 void draw_round_clock_mark(uint8_t innerR1, uint8_t outerR1, uint8_t innerR2, uint8_t outerR2, uint8_t innerR3, uint8_t outerR3)
