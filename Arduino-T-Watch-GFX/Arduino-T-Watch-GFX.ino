@@ -1,9 +1,10 @@
 /*
-   TTGO T-Watch simple example (revise from TFT_eSPI TFT_Clock example)
+   TTGO T-Watch GFX example
+   - depends on Arduino_GFX library
    - read current time from RTC
    - draw analog clock face every loop
-   - shutdown power after 60 seconds
-   - press power button to restart
+   - shutdown power after 20 seconds
+   - press power button to start again
 */
 // auto sleep time (in milliseconds)
 #define SLEEP_TIME 20000L
@@ -58,7 +59,7 @@ static uint8_t osx = CENTER, osy = CENTER, omx = CENTER, omy = CENTER, ohx = CEN
 static uint8_t nsx, nsy, nmx, nmy, nhx, nhy;                                                       // H, M, S x & y coords
 static uint8_t xMin, yMin, xMax, yMax;                                                             // redraw range
 static uint8_t hh, mm, ss;
-static unsigned long targetTime, sleepTime; // next action time
+static unsigned long nextSecond, sleepTime; // next action time
 static bool ledTurnedOn = false;
 static uint8_t tmp;
 #if (CORE_DEBUG_LEVEL > 0)
@@ -97,16 +98,16 @@ void setup(void)
   axp.enableChargeing(true);
 #endif
 
-  targetTime = ((millis() / 1000) + 1) * 1000;
+  nextSecond = ((millis() / 1000) + 1) * 1000;
   sleepTime = millis() + SLEEP_TIME;
 }
 
 void loop()
 {
   unsigned long cur_millis = millis();
-  if (cur_millis >= targetTime)
+  if (cur_millis >= nextSecond)
   {
-    targetTime += 1000;
+    nextSecond += 1000;
     ss++; // Advance second
     if (ss == 60)
     {
@@ -219,7 +220,7 @@ void enterSleep()
   // read date and time from RTC
   read_rtc();
 
-  targetTime = ((millis() / 1000) + 1) * 1000;
+  nextSecond = ((millis() / 1000) + 1) * 1000;
   sleepTime = millis() + SLEEP_TIME;
 #endif
 }
