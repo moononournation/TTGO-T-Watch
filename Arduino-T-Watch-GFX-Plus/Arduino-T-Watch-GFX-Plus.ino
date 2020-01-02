@@ -7,7 +7,7 @@
    - press power button to start again
 */
 // auto sleep time (in milliseconds)
-#define SLEEP_TIME 20000L
+#define SLEEP_TIME 60000L
 // uncomment below define for using power chip turnoff power instead of light sleep
 #define AXP_POWER_OFF
 
