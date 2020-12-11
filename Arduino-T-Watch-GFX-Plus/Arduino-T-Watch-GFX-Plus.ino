@@ -19,10 +19,7 @@
 
 #include <math.h>
 
-#include <Arduino_ESP32SPI.h>
-#include <Arduino_GFX.h>
-#include <Arduino_TFT.h>
-#include <Arduino_ST7789.h> // Hardware-specific library for ST7789 (with or without CS pin)
+#include <Arduino_GFX_Library.h>
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 19 /* MOSI */);
 Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 

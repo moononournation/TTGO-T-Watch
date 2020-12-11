@@ -1,7 +1,7 @@
 #ifndef WIFI_ANALYZER_H
 #define WIFI_ANALYZER_H
 
-#include <Arduino_GFX.h>
+#include <Arduino_GFX_Library.h>
 #include <WiFi.h>
 
 // RSSI RANGE

@@ -1,7 +1,7 @@
 #ifndef ARDUINO_GFX_H
 #define ARDUINO_GFX_H
 
-#include <Arduino_GFX.h>
+#include <Arduino_GFX_Library.h>
 
 #define BACKGROUND BLACK
 #define MARK_COLOR WHITE
